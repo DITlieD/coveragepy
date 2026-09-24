@@ -27,7 +27,13 @@ Unreleased
   function return could mistakenly report an uncovered branch. This is now
   fixed, closing `issue 2168`_.
 
+- Fix: on Python 3.14 and later, the ``else`` clause of a ``try`` whose body is
+  a ``with`` statement could be reported as covered when the ``with`` raised.
+  ``RERAISE`` does not fall into the following handler, so that handler is no
+  longer counted as the branch destination. This closes `issue 2289`_.
+
 .. _issue 2168: https://github.com/coveragepy/coveragepy/issues/2168
+.. _issue 2289: https://github.com/coveragepy/coveragepy/issues/2289
 
 
 .. start-releases
