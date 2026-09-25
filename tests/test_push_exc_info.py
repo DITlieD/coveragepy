@@ -5,14 +5,19 @@
 
 from __future__ import annotations
 
+import pytest
+
 from coverage.bytecode import BranchArcResolver, NO_FALL_THROUGH
 from coverage.pytracer import PUSH_EXC_INFO, PyTracer
 
 
 def test_push_exc_info_line_event_is_not_recorded() -> None:
+    if PUSH_EXC_INFO is None:
+        pytest.skip("this interpreter has no PUSH_EXC_INFO opcode")
+
     class Code:
         co_filename = "sample.py"
-        co_code = bytes([PUSH_EXC_INFO or 0])
+        co_code = bytes([PUSH_EXC_INFO])
         co_name = "sample"
         co_firstlineno = 1
 
