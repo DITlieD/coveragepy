@@ -5,23 +5,31 @@
 
 from __future__ import annotations
 
+from types import FrameType
+from typing import cast
+
 import pytest
 
-from coverage.bytecode import BranchArcResolver, NO_FALL_THROUGH
+from coverage.bytecode import NO_FALL_THROUGH, BranchArcResolver
 from coverage.pytracer import PUSH_EXC_INFO, PyTracer
 
 
 def test_push_exc_info_line_event_is_not_recorded() -> None:
-    if PUSH_EXC_INFO is None:
+    opcode = PUSH_EXC_INFO
+    if opcode is None:
         pytest.skip("this interpreter has no PUSH_EXC_INFO opcode")
 
     class Code:
+        """A tiny code object whose first opcode is PUSH_EXC_INFO."""
+
         co_filename = "sample.py"
-        co_code = bytes([PUSH_EXC_INFO])
+        co_code = bytes([opcode])
         co_name = "sample"
         co_firstlineno = 1
 
     class Frame:
+        """Enough of a frame for the line-event branch."""
+
         def __init__(self) -> None:
             self.f_code = Code()
             self.f_lasti = 0
@@ -33,8 +41,8 @@ def test_push_exc_info_line_event_is_not_recorded() -> None:
     tracer.cur_file_data = set()
     tracer.trace_arcs = False
     tracer.last_line = 1
-    result = tracer._trace(Frame(), "line", None)
-    assert result == tracer._cached_bound_method_trace
+    result = tracer._trace(cast(FrameType, Frame()), "line", None)
+    assert result is tracer._cached_bound_method_trace  # pylint: disable=comparison-with-callable
     assert tracer.cur_file_data == set()
 
 
@@ -42,7 +50,7 @@ def test_reraise_branch_has_no_fall_through() -> None:
     def sample() -> None:
         try:
             raise ValueError("x")
-        except ValueError:
+        except ValueError:  # pylint: disable=try-except-raise
             raise
 
     code = sample.__code__
