@@ -16,14 +16,15 @@ from coverage.pytracer import PUSH_EXC_INFO, PyTracer
 
 def test_push_exc_info_line_event_is_not_recorded() -> None:
     opcode = PUSH_EXC_INFO
-    if opcode is None:
+    if not isinstance(opcode, int):
         pytest.skip("this interpreter has no PUSH_EXC_INFO opcode")
+    code_bytes = bytes([opcode])
 
     class Code:
         """A tiny code object whose first opcode is PUSH_EXC_INFO."""
 
         co_filename = "sample.py"
-        co_code = bytes([opcode])
+        co_code = code_bytes
         co_name = "sample"
         co_firstlineno = 1
 
