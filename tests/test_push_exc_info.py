@@ -43,7 +43,7 @@ def test_push_exc_info_line_event_is_not_recorded() -> None:
     tracer.trace_arcs = False
     tracer.last_line = 1
     result = tracer._trace(cast(FrameType, Frame()), "line", None)
-    assert result is tracer._cached_bound_method_trace  # pylint: disable=comparison-with-callable
+    assert result is tracer._cached_bound_method_trace
     assert tracer.cur_file_data == set()
 
 
