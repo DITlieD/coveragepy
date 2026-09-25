@@ -54,6 +54,8 @@ def test_reraise_branch_has_no_fall_through() -> None:
         except ValueError:  # pylint: disable=try-except-raise
             raise
 
+    with pytest.raises(ValueError, match="x"):
+        sample()
     code = sample.__code__
     dest = next(index for index, op in enumerate(code.co_code) if op in NO_FALL_THROUGH)
     resolver = BranchArcResolver(code, {0: 1}, {})
