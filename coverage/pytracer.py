@@ -263,7 +263,11 @@ class PyTracer(Tracer):
                 if PUSH_EXC_INFO is not None:
                     lasti = frame.f_lasti
                     code = frame.f_code.co_code
-                    if isinstance(lasti, int) and 0 <= lasti < len(code) and code[lasti] == PUSH_EXC_INFO:
+                    if (
+                        isinstance(lasti, int)
+                        and 0 <= lasti < len(code)
+                        and code[lasti] == PUSH_EXC_INFO
+                    ):
                         return self._cached_bound_method_trace
                 flineno: TLineNo = frame.f_lineno
 
