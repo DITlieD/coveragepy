@@ -12,14 +12,14 @@ import pytest
 
 try:
     from coverage.bytecode import NO_FALL_THROUGH, BranchArcResolver
-except ImportError:  # the seeded revert removes the no-fall-through set
+except ImportError:  # pragma: no cover  # the seeded revert removes the no-fall-through set
     from coverage.bytecode import BranchArcResolver
 
     NO_FALL_THROUGH = set[int]()
 
 try:
     from coverage.pytracer import PUSH_EXC_INFO, PyTracer
-except ImportError:  # the seeded revert removes the opcode name
+except ImportError:  # pragma: no cover  # the seeded revert removes the opcode name
     from coverage.pytracer import PyTracer
 
     PUSH_EXC_INFO = None
@@ -59,7 +59,7 @@ def test_push_exc_info_line_event_is_not_recorded() -> None:
 
 
 def test_reraise_branch_has_no_fall_through() -> None:
-    if not NO_FALL_THROUGH:
+    if not NO_FALL_THROUGH:  # pragma: no cover
         pytest.skip("this build has no no-fall-through opcodes")
 
     def sample() -> None:
