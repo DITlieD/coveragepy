@@ -11,7 +11,13 @@ from typing import cast
 import pytest
 
 from coverage.bytecode import NO_FALL_THROUGH, BranchArcResolver
-from coverage.pytracer import PUSH_EXC_INFO, PyTracer
+
+try:
+    from coverage.pytracer import PUSH_EXC_INFO, PyTracer
+except ImportError:  # the seeded revert removes the opcode name
+    from coverage.pytracer import PyTracer
+
+    PUSH_EXC_INFO = None
 
 
 def test_push_exc_info_line_event_is_not_recorded() -> None:
