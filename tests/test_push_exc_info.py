@@ -15,7 +15,7 @@ try:
 except ImportError:  # the seeded revert removes the no-fall-through set
     from coverage.bytecode import BranchArcResolver
 
-    NO_FALL_THROUGH: set[int] = set()
+    NO_FALL_THROUGH = set[int]()
 
 try:
     from coverage.pytracer import PUSH_EXC_INFO, PyTracer
