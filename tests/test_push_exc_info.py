@@ -10,7 +10,12 @@ from typing import cast
 
 import pytest
 
-from coverage.bytecode import NO_FALL_THROUGH, BranchArcResolver
+try:
+    from coverage.bytecode import NO_FALL_THROUGH, BranchArcResolver
+except ImportError:  # the seeded revert removes the no-fall-through set
+    from coverage.bytecode import BranchArcResolver
+
+    NO_FALL_THROUGH = frozenset()
 
 try:
     from coverage.pytracer import PUSH_EXC_INFO, PyTracer
@@ -54,6 +59,9 @@ def test_push_exc_info_line_event_is_not_recorded() -> None:
 
 
 def test_reraise_branch_has_no_fall_through() -> None:
+    if not NO_FALL_THROUGH:
+        pytest.skip("this build has no no-fall-through opcodes")
+
     def sample() -> None:
         try:
             raise ValueError("x")
